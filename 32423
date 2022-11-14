@@ -1,0 +1,791 @@
+
+local lib = {}
+
+function lib:Create(Name)
+	--|[ MainFrames ]|--
+	local MP = Instance.new("ScreenGui",game.CoreGui)
+	local CPP = Instance.new("Frame",MP)
+	local FSP = Instance.new("Frame",MP)
+	local TFP = Instance.new("Frame",MP)
+	local TLP = Instance.new("Frame",MP)
+	local TLPL = Instance.new("UIListLayout",TLP)
+	local panics = false
+	MP.Name = Name
+
+	CPP.Name = "ColorPickerParent"
+	CPP.Size = UDim2.new(0, 154,0, 45)
+	CPP.Position = UDim2.new(0, 842,0, 145)
+	CPP.BackgroundTransparency = 1
+
+	FSP.Name = "FunctionSettingsParent"
+	FSP.Size = UDim2.new(0, 397,0, 411)
+	FSP.Position = UDim2.new(0, 391,0, 144)
+	FSP.BackgroundTransparency = 1
+
+	TFP.Name = "TabFunctionParent"
+	TFP.Size = UDim2.new(0, 177,0, 282)
+	TFP.Position = UDim2.new(0, 160,0, 208)
+	TFP.BackgroundTransparency = 1
+
+	TLP.Name = "TabListParent"
+	TLP.Size = UDim2.new(0, 136,0, 281)
+	TLP.Position = UDim2.new(0, 10,0, 208)
+	TLP.BackgroundTransparency = 1
+
+	TLPL.Padding = UDim.new(0,6)
+	TLPL.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	local tabs = {}
+	function tabs:CreateTab(Name)
+
+		--|[ Tabs ]|--
+		local Tab = Instance.new("Frame",TLP)
+		local TC = Instance.new("UICorner",Tab)
+		local TS = Instance.new("UIStroke",Tab)
+		local TButton = Instance.new("TextButton",Tab)
+
+		Tab.Name = Name
+		Tab.Size = UDim2.new(0, 133,0, 23)
+		Tab.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+
+		TC.CornerRadius = UDim.new(0,3)
+		TS.Thickness = 2
+		TS.Color = Color3.new(0.137255, 0.137255, 0.137255)
+
+		TButton.Name = "TabButton"
+		TButton.Text = Name
+		TButton.TextScaled = true
+		TButton.TextColor3 = Color3.new(1, 0.0392157, 0.952941)
+		TButton.Font = Enum.Font.Ubuntu
+		TButton.Size = UDim2.new(0, 132,0, 22)
+		TButton.Position = UDim2.new(0,1,0,1)
+		TButton.BackgroundTransparency = 1
+
+		--|[ TabsFunction ]|--
+		local TFM = Instance.new("Frame",TFP)
+		local TFC = Instance.new("UICorner",TFM)
+		local TFS = Instance.new("UIStroke",TFM)
+
+		local TFSC = Instance.new("ScrollingFrame",TFM)
+		local TFPSCU = Instance.new("UIListLayout",TFSC)
+		TFPSCU.Padding = UDim.new(0,5)
+		local TFL = Instance.new("Frame",TFM)
+		local TFLC = Instance.new("UICorner",TFL)
+
+		local TFT = Instance.new("TextLabel",TFM)
+
+		TFM.Name = "TFMain "..Name
+		TFM.Size = UDim2.new(0, 176,0, 281)
+		TFM.Position = UDim2.new(0, 1,0, 0)
+		TFM.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+		TFM.Visible = false
+
+		TFC.CornerRadius = UDim.new(0,4)
+
+		TFS.Thickness = 3
+		TFS.Color = Color3.new(0.137255, 0.137255, 0.137255)
+
+		TFSC.BackgroundTransparency = 1
+		TFSC.Size = UDim2.new(0, 169,0, 238)
+		TFSC.Position = UDim2.new(0, 3,0, 35)
+		TFSC.ScrollBarThickness = 2
+		TFSC.ScrollBarImageColor3 = Color3.new(1, 0.0392157, 0.952941)
+		
+		TFL.Size = UDim2.new(0, 169,0, 2)
+		TFL.Position = UDim2.new(0, 3,0, 25)
+		TFL.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
+
+		TFLC.CornerRadius = UDim.new(0,3)
+
+		TFT.Text = Name
+		TFT.TextScaled = true
+		TFT.TextColor3 = Color3.new(1, 0.0392157, 0.952941)
+		TFT.Font = Enum.Font.Ubuntu
+		TFT.Size = UDim2.new(0, 169,0, 23)
+		TFT.Position = UDim2.new(0, 3,0, 3)
+		TFT.BackgroundTransparency = 1
+		TFT.TextXAlignment = Enum.TextXAlignment.Left
+
+		TButton.MouseButton1Click:Connect(function()
+			for v,i in pairs(TFP:GetChildren()) do
+				if i ~= TFM then
+					i.Visible = false
+				end
+			end
+			for v,i in pairs(FSP:GetChildren()) do
+				i.Visible = false
+			end
+			for v,i in pairs(CPP:GetChildren()) do
+				i.Visible = false
+			end
+			if TFM.Visible == true then
+				TFM.Visible = false
+			else
+				TFM.Visible = true
+			end
+		end)
+
+		local functions = {}
+		function functions:CreateFunction(Name,callback)
+			--| Main |--
+
+			local Tp = false
+			local Function = Instance.new("Frame",TFSC)
+			local FC = Instance.new("UICorner",Function)
+			local ImgArrow = Instance.new("ImageButton",Function)
+			local TB = Instance.new("TextButton",Function)
+
+			Function.Name = Name
+			Function.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
+			Function.Size = UDim2.new(0, 154,0, 18)
+
+			FC.CornerRadius = UDim.new(0,4)
+
+			ImgArrow.Image = "rbxassetid://3926307971"
+			ImgArrow.ImageColor3 = Color3.new(1, 0.0392157, 0.952941)
+			ImgArrow.ImageRectOffset = Vector2.new(564,284)
+			ImgArrow.ImageRectSize = Vector2.new(36,36)
+			ImgArrow.Position = UDim2.new(0.838, 0,0, 0)
+			ImgArrow.Size = UDim2.new(0, 17,0, 18)
+			ImgArrow.BackgroundTransparency = 1
+
+			TB.Text = Name
+			TB.Font = Enum.Font.Ubuntu
+			TB.TextScaled = true
+			TB.TextColor3 = Color3.new(1, 0.0392157, 0.952941)
+			TB.Size = UDim2.new(0, 111,0, 18)
+			TB.Position = UDim2.new(0.052, 0,0, 0)
+			TB.BackgroundTransparency = 1
+
+			TB.MouseButton1Click:Connect(function()
+				if Tp == false then
+					Tp = true
+					callback(Tp)
+				else
+					Tp = false
+					callback(Tp)
+				end
+			end)
+
+			--| Settings |--
+			local FS = Instance.new("Frame",FSP)
+			local FSC = Instance.new("UICorner",FS)
+			local FSS = Instance.new("UIStroke",FS)
+			local FSL = Instance.new("Frame",FS)
+			local FSLC = Instance.new("UICorner",FSL)
+			local FSSF = Instance.new("ScrollingFrame",FS)
+			local FSSFUi = Instance.new("UIListLayout",FSSF)
+			local FST = Instance.new("TextLabel",FS)
+
+			FS.Name = Name
+			FS.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+			FS.Size = UDim2.new(0, 396,0, 410)
+			FS.Position = UDim2.new(0, 1,0, 1)
+			FS.Visible = false
+			
+			FSC.CornerRadius = UDim.new(0,3)
+			FSS.Thickness = 3
+			FSS.Color = Color3.new(0.137255, 0.137255, 0.137255)
+
+			FSL.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
+			FSL.Size = UDim2.new(0, 381,0, 2)
+			FSL.Position = UDim2.new(0, 8,0, 18)
+
+			FSLC.CornerRadius = UDim.new(0,3)
+
+			FSSF.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
+			FSSF.BorderSizePixel = 0
+			FSSF.ScrollBarThickness = 2
+			FSSF.ScrollBarImageColor3 = Color3.new(0.839216, 0.0392157, 1)
+			FSSF.Size = UDim2.new(0, 381,0, 378)
+			FSSF.Position = UDim2.new(0, 8,0, 26)
+			
+			FSSFUi.Padding = UDim.new(0,5)
+			FSSFUi.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+			FST.BackgroundTransparency = 1
+			FST.TextScaled = true
+			FST.TextColor3 = Color3.new(0.839216, 0.0392157, 1)
+			FST.Font = Enum.Font.Ubuntu
+			FST.Size = UDim2.new(0, 381,0, 17)
+			FST.Position = UDim2.new(0, 8,0, 1)
+			FST.Text = Name
+			FST.TextXAlignment = Enum.TextXAlignment.Left
+			
+			ImgArrow.MouseButton1Click:Connect(function()
+				for v,i in pairs(FSP:GetChildren()) do
+					if i ~= FS then
+						i.Visible = false
+					end
+				end
+				
+				if FS.Visible == true then
+					FS.Visible = false
+				else
+					FS.Visible = true
+				end
+			end)
+			
+			local funcset = {}
+			function funcset:AddLable(Text)
+				local Lable = Instance.new("Frame",FSSF)
+				local LableText = Instance.new("TextLabel",Lable)
+				local LableCorn = Instance.new("UICorner",Lable)
+				
+				Lable.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+				Lable.Size = UDim2.new(0, 360,0, 20)
+				
+				LableText.Text = Text
+				LableText.BackgroundTransparency = 1
+				LableText.TextColor3 = Color3.new(0.839216, 0.0392157, 1)
+				LableText.Font = Enum.Font.Ubuntu
+				LableText.Size = UDim2.new(1, 0,1, 0)
+				LableText.Position = UDim2.new(0, 1,0, 2)
+				LableText.TextScaled = true
+				
+				LableCorn.CornerRadius = UDim.new(0,3)
+			end
+			function funcset:AddToggle(Text,callback)
+				local Toggle = Instance.new("Frame",FSSF)
+				local TC = Instance.new("UICorner",Toggle)
+				local Imagebut = Instance.new("ImageButton",Toggle)
+				local IBC = Instance.new("UICorner",Imagebut)
+				local Tl = Instance.new("TextButton",Toggle)
+				local TT = false
+				
+				Toggle.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+				Toggle.Size = UDim2.new(0, 360,0, 20)
+				
+				TC.CornerRadius = UDim.new(0,3)
+				
+				Imagebut.Size = UDim2.new(0, 19,0, 18)
+				Imagebut.Position = UDim2.new(0, 337,0, 1)
+				Imagebut.BackgroundColor3 = Color3.new(1, 0, 0)
+				
+				IBC.CornerRadius = UDim.new(0,3)
+				
+				Tl.Text = Text
+				Tl.TextScaled = true
+				Tl.TextColor3 = Color3.fromRGB(255, 10, 243)
+				Tl.Font = Enum.Font.Ubuntu
+				Tl.Size = UDim2.new(0, 292,0, 18)
+				Tl.Position = UDim2.new(0, 9,0, 2)
+				Tl.BackgroundTransparency = 1
+				Tl.TextXAlignment = Enum.TextXAlignment.Left
+				
+				Imagebut.MouseButton1Click:Connect(function()
+					if TT == false then
+						TT = true
+						Imagebut.BackgroundColor3 = Color3.new(0.14902, 1, 0)
+						callback(TT)
+					else
+						TT = false
+						Imagebut.BackgroundColor3 = Color3.new(1, 0, 0)
+						callback(TT)
+					end
+				end)
+				Tl.MouseButton1Click:Connect(function()
+					if TT == false then
+						TT = true
+						Imagebut.BackgroundColor3 = Color3.new(0.14902, 1, 0)
+						callback(TT)
+					else
+						TT = false
+						Imagebut.BackgroundColor3 = Color3.new(1, 0, 0)
+						callback(TT)
+					end
+				end)
+			end
+			
+			function funcset:AddLine()
+				local Line = Instance.new("Frame",FSSF)
+				local LC = Instance.new("UICorner",Line)
+				
+				Line.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+				Line.Size = UDim2.new(0, 353,0, 2)
+				
+				LC.CornerRadius = UDim.new(0,3)
+			end
+			
+			function funcset:AddColorPicker(Name,Callback,Callback2)
+				
+				--| Main |--
+				local ColorPicker = Instance.new("Frame",FSSF)
+				local Color1 = Instance.new("ImageButton",ColorPicker)
+				local CC1 = Instance.new("UICorner",Color1)
+				local Color2 = Instance.new("ImageButton",ColorPicker)
+				local CC2 = Instance.new("UICorner",Color2)
+				local CPC = Instance.new("UICorner",ColorPicker)
+				local ColorLable = Instance.new("TextLabel",ColorPicker)
+				
+				ColorPicker.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+				ColorPicker.Size = UDim2.new(0, 360,0, 20)
+				
+				CPC.CornerRadius = UDim.new(0,3)
+				
+				CC1.CornerRadius = UDim.new(0,3)
+				CC2.CornerRadius = UDim.new(0,3)
+				
+				Color1.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+				Color1.Name = "Color1"
+				Color1.Size = UDim2.new(0, 19,0, 18)
+				Color1.Position = UDim2.new(0.936, 0,0.05, 0)
+				
+				Color2.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+				Color2.Name = "Color2"
+				Color2.Size = UDim2.new(0, 19,0, 18)
+				Color2.Position = UDim2.new(0.867, 0,0.05, 0)
+				
+				ColorLable.BackgroundTransparency = 1
+				ColorLable.Position = UDim2.new(0, 8, 0, 1)
+				ColorLable.Size = UDim2.new(0, 381, 0, 17)
+				ColorLable.Font = Enum.Font.Ubuntu
+				ColorLable.TextColor3 = Color3.fromRGB(255, 10, 243)
+				ColorLable.TextScaled = true
+				ColorLable.TextXAlignment = Enum.TextXAlignment.Left
+				ColorLable.Text = Name
+				
+				--| Picker |--
+				local CPF = Instance.new("Frame",CPP)
+				local CPFC = Instance.new("UICorner",CPF)
+				local CPFS = Instance.new("UIStroke",CPF)
+				
+				local Color = Instance.new("Frame",CPF)
+				local ColorC = Instance.new("UICorner",Color)
+				local ColorG = Instance.new("UIGradient",Color)
+				local ColorPicker = Instance.new("Frame",Color)
+				local CPC = Instance.new("UICorner",ColorPicker)
+				
+				local Bottom = Instance.new("Frame",CPF)
+				local BottomC = Instance.new("UICorner",Bottom)
+				local BottomG = Instance.new("UIGradient",Bottom)
+				local BottomPicker = Instance.new("Frame",Bottom)
+				
+				CPF.Size = UDim2.new(1,0,1,0)
+				CPF.Position = UDim2.new(0,0,0,0)
+				CPF.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+				CPF.Visible = false
+				
+				CPFC.CornerRadius = UDim.new(0,3)
+				CPFS.Color = Color3.new(0.137255, 0.137255, 0.137255)
+				CPFS.Thickness = 3
+				
+				Color.BackgroundColor3 = Color3.new(1, 1, 1)
+				Color.Size = UDim2.new(0, 155,0, 20)
+				Color.Position = UDim2.new(0, 0,0.095, 0)
+				
+				ColorC.CornerRadius = UDim.new(0,3)
+				ColorG.Color = ColorSequence.new{
+					ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)), 
+					ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 247, 0)), 
+					ColorSequenceKeypoint.new(0.65, Color3.fromRGB(0, 251, 255)), 
+					ColorSequenceKeypoint.new(1.00, Color3.fromRGB(170, 0, 255))
+				}
+				
+				ColorPicker.Size = UDim2.new()
+				ColorPicker.Name = "Picker"
+				ColorPicker.Parent = Color
+				ColorPicker.BackgroundColor3 = Color3.fromRGB(27, 42, 53)
+				ColorPicker.BorderColor3 = Color3.fromRGB(27, 42, 53)
+				ColorPicker.BorderSizePixel = 0
+				ColorPicker.Size = UDim2.new(0, 5, 1, 0)
+				
+				Bottom.Name = "Bottom"
+				Bottom.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Bottom.BorderSizePixel = 0
+				Bottom.Position = UDim2.new(0, 0, 0, 26)
+				Bottom.Size = UDim2.new(0, 155, 0, 18)
+
+				BottomC.CornerRadius = UDim.new(0, 3)
+				BottomC.Parent = Bottom
+				
+				BottomG.Color = ColorSequence.new{
+					ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), 
+					ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+				}
+				BottomG.Parent = Bottom
+				
+				BottomPicker.Name = "Picker"
+				BottomPicker.Parent = Bottom
+				BottomPicker.BackgroundColor3 = Color3.fromRGB(27, 42, 53)
+				BottomPicker.BorderColor3 = Color3.fromRGB(27, 42, 53)
+				BottomPicker.BorderSizePixel = 0
+				BottomPicker.Size = UDim2.new(0, 5, 1, 0)
+				
+				local Player = game.Players.LocalPlayer
+				local UserInputService = game:GetService('UserInputService')
+				local Toggle = nil
+				local TogledColor = nil
+				--| Top |--
+				local Colorselecting = false
+				local function getColor(percentage, ColorKeyPoints)
+					if (percentage < 0) or (percentage>1) then
+						warn'getColor got out of bounds percentage (less than 0 or greater than 1'
+					end
+
+					local closestToLeft = ColorKeyPoints[1]
+					local closestToRight = ColorKeyPoints[#ColorKeyPoints]
+					local LocalPercentage = .5
+					local color = closestToLeft.Value
+					for i=1,#ColorKeyPoints-1 do
+						if (ColorKeyPoints[i].Time <= percentage) and (ColorKeyPoints[i+1].Time >= percentage) then
+							closestToLeft = ColorKeyPoints[i]
+							closestToRight = ColorKeyPoints[i+1]
+							LocalPercentage = (percentage-closestToLeft.Time)/(closestToRight.Time-closestToLeft.Time)
+							color = closestToLeft.Value:lerp(closestToRight.Value,LocalPercentage)
+							return color
+						end
+					end
+					warn('Color not found!')
+					return color
+				end
+
+				local function ColorbeginSelection()
+					Colorselecting = true
+					local ColorKeyPoints = ColorG.Color.Keypoints
+					local OtherColorKeyPoints = Bottom:FindFirstChild("UIGradient")
+					repeat wait()
+
+						local minXPos = Color.AbsolutePosition.X
+						local maxXPos = minXPos+Color.AbsoluteSize.X	
+						local xPixelSize = maxXPos-minXPos	
+						local mouseX = UserInputService:GetMouseLocation().X
+
+						if mouseX<minXPos then
+							mouseX = minXPos
+						elseif mouseX>maxXPos then
+							mouseX = maxXPos
+						end
+
+						local xPos = (mouseX-minXPos)/xPixelSize
+
+						ColorPicker.Position = UDim2.new(xPos,0,0,0)
+
+						local Color = ColorSequence.new{
+							ColorSequenceKeypoint.new(0,Color3.fromRGB(255,255,255)),
+							ColorSequenceKeypoint.new(0.5,getColor(xPos,ColorKeyPoints)),
+							ColorSequenceKeypoint.new(1,Color3.fromRGB(0,0,0))
+						}
+						Bottom.UIGradient.Color = Color
+						TogledColor = getColor(xPos,ColorKeyPoints)
+						Toggle.ImageColor3 = TogledColor
+						
+					until not Colorselecting
+				end
+
+				local function ColorendSelection()
+					Colorselecting = false
+				end
+
+				local function ColorinputBegan(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+						ColorbeginSelection()
+						if Toggle.Name == "Color1" then
+							Callback(TogledColor)
+						else
+							Callback2(TogledColor)
+						end
+					end
+				end
+				Color.InputBegan:Connect(ColorinputBegan)
+
+				local function ColorinputEnded(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+						ColorendSelection()
+					end
+				end
+				Color.InputEnded:Connect(ColorinputEnded)
+				
+				
+				--| Bottom |--
+				local selecting = false
+
+				local function beginSelection()
+					selecting = true
+					local ColorKeyPoints = BottomG.Color.Keypoints
+					repeat wait()
+						local minXPos = Bottom.AbsolutePosition.X
+						local maxXPos = minXPos+Bottom.AbsoluteSize.X
+						local xPixelSize = maxXPos-minXPos
+						local mouseX = UserInputService:GetMouseLocation().X
+						if mouseX<minXPos then
+							mouseX = minXPos
+						elseif mouseX>maxXPos then
+							mouseX = maxXPos
+						end
+						local xPos = (mouseX-minXPos)/xPixelSize
+						BottomPicker.Position = UDim2.new(xPos,0,0,0)
+						
+						TogledColor = getColor(xPos,ColorKeyPoints)
+						Toggle.ImageColor3 = TogledColor
+						
+					until not selecting
+				end
+				local function endSelection()
+					selecting = false
+				end
+				local function inputBegan(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+						beginSelection()
+						if Toggle.Name == "Color1" then
+							Callback(TogledColor)
+						else
+							Callback2(TogledColor)
+						end
+					end
+				end
+				Bottom.InputBegan:Connect(inputBegan)
+				local function inputEnded(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+						endSelection()
+					end
+				end
+				Bottom.InputEnded:Connect(inputEnded)
+				
+				Color1.MouseButton1Click:Connect(function()
+					for i,x in pairs(CPP:GetChildren()) do
+						if x ~= CPF then
+							x.Visible = false
+						end
+					end
+					if Toggle == Color2 then
+						CPF.Visible = true
+					else
+						if CPF.Visible == true then
+							CPF.Visible = false
+						else
+							CPF.Visible = true
+						end
+					end
+					Toggle = Color1
+				end)
+				Color2.MouseButton1Click:Connect(function()
+					for i,x in pairs(CPP:GetChildren()) do
+						if x ~= CPF then
+							x.Visible = false
+						end
+					end
+					if Toggle == Color1 then
+						CPF.Visible = true
+					else
+						if CPF.Visible == true then
+							CPF.Visible = false
+						else
+							CPF.Visible = true
+						end
+					end
+					Toggle = Color2
+				end)
+			end
+			function funcset:AddButton(Name,Callback)
+
+				local Button = Instance.new("Frame",FSSF)
+				local UICorner = Instance.new("UICorner",Button)
+				local TextButton = Instance.new("TextButton",Button)
+				
+				Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+				Button.BorderSizePixel = 0
+				Button.Position = UDim2.new(0, 1, 0, 1)
+				Button.Size = UDim2.new(0, 360, 0, 20)
+
+				UICorner.CornerRadius = UDim.new(0, 3)
+
+				TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				TextButton.Text = Name
+				TextButton.BackgroundTransparency = 1.000
+				TextButton.Position = UDim2.new(0, 1, 0, 1)
+				TextButton.Size = UDim2.new(0, 355, 0, 19)
+				TextButton.Font = Enum.Font.Ubuntu
+				TextButton.TextColor3 = Color3.fromRGB(255, 10, 243)
+				TextButton.TextScaled = true
+				
+				TextButton.MouseButton1Click:Connect(function()
+					Callback()
+				end)
+			end
+			function funcset:AddSlider(Text,minvlaue,maxvalue,Callback)
+				
+				local points = 0
+				local releaseconnection = nil
+				local mouse = game.Players.LocalPlayer:GetMouse()
+				local uis = game:GetService("UserInputService")
+				local Value;
+				
+				local Slider = Instance.new("Frame",FSSF)
+				local UICorner = Instance.new("UICorner",Slider)
+				local TextLabel = Instance.new("TextLabel",Slider)
+				local TextButton = Instance.new("TextButton",Slider)
+				local Frame = Instance.new("Frame",TextButton)
+				local UICorner_2 = Instance.new("UICorner",TextButton)
+				local UICorner_3 = Instance.new("UICorner",Frame)
+				local TextLabel_2 = Instance.new("TextLabel",TextButton)
+
+				Slider.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+				Slider.BorderSizePixel = 0
+				Slider.Position = UDim2.new(0, 1, 0, 1)
+				Slider.Size = UDim2.new(0, 360, 0, 20)
+
+				UICorner.CornerRadius = UDim.new(0, 3)
+
+				TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				TextLabel.Text = Text
+				TextLabel.BackgroundTransparency = 1.000
+				TextLabel.Position = UDim2.new(0, 9, 0, 1)
+				TextLabel.Size = UDim2.new(0, 134, 0, 19)
+				TextLabel.Font = Enum.Font.Ubuntu
+				TextLabel.TextColor3 = Color3.fromRGB(255, 10, 243)
+				TextLabel.TextScaled = true
+				TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+				TextButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+				TextButton.BorderSizePixel = 0
+				TextButton.ClipsDescendants = true
+				TextButton.Position = UDim2.new(0, 147, 0, 2)
+				TextButton.Size = UDim2.new(0, 209, 0, 15)
+				TextButton.Font = Enum.Font.SourceSans
+				TextButton.Text = ""
+				TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+				TextButton.TextScaled = true
+
+				Frame.BackgroundColor3 = Color3.fromRGB(255, 9, 251)
+				Frame.BorderSizePixel = 0
+				Frame.Size = UDim2.new(0, 0, 0, 15)
+
+				UICorner_2.CornerRadius = UDim.new(0, 3)
+				UICorner_3.CornerRadius = UDim.new(0, 3)
+
+				TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				TextLabel_2.BackgroundTransparency = 1.000
+				TextLabel_2.Position = UDim2.new(0, 1, 0, 0)
+				TextLabel_2.Size = UDim2.new(0, 200, 0, 15)
+				TextLabel_2.Font = Enum.Font.Ubuntu
+				TextLabel_2.TextColor3 = Color3.fromRGB(10, 10, 10)
+				TextLabel_2.TextScaled = true
+				TextLabel_2.Text = tostring(minvlaue)
+				
+				TextButton.MouseButton1Down:Connect(function()
+					Value = math.floor((((tonumber(maxvalue) - tonumber(minvlaue)) / 209) * Frame.AbsoluteSize.X) + tonumber(minvlaue)) or 0
+					pcall(function()
+						Callback(Value)
+					end)
+					Frame.Size = UDim2.new(0, math.clamp(mouse.X - Frame.AbsolutePosition.X, 0.5, 209), 0, 15)
+					local moveconnection = mouse.Move:Connect(function()
+						TextLabel_2.Text = Value
+						Value = math.floor((((tonumber(maxvalue) - tonumber(minvlaue)) / 209) * Frame.AbsoluteSize.X) + tonumber(minvlaue))
+						pcall(function()
+							Callback(Value)
+						end)
+						Frame.Size = UDim2.new(0, math.clamp(mouse.X - Frame.AbsolutePosition.X, 0.5, 209), 0, 15)
+					end)
+					releaseconnection = uis.InputEnded:Connect(function(Mouse)
+						if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
+							Value = math.floor((((tonumber(maxvalue) - tonumber(minvlaue)) / 209) * Frame.AbsoluteSize.X) + tonumber(minvlaue))
+							pcall(function()
+								Callback(Value)
+							end)
+							Frame.Size = UDim2.new(0, math.clamp(mouse.X - Frame.AbsolutePosition.X, 0.5, 209), 0, 15)
+							moveconnection:Disconnect()
+							releaseconnection:Disconnect()
+						end
+					end)
+				end)
+			end
+			
+			function funcset:AddBinder(Named,Default,holding,callback)
+
+				local Binder = Instance.new("Frame",FSSF)
+				local UICorner = Instance.new("UICorner",Binder)
+				local Name = Instance.new("TextButton",Binder)
+				local TextButton = Instance.new("TextButton",Binder)
+				local UICorner_2 = Instance.new("UICorner",TextButton)
+				
+				local UI = game:GetService("UserInputService")
+				
+				local bind = Enum.KeyCode[Default]
+				local binding = false
+				local bindtogle = false
+				local holdings = false
+				
+				Binder.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+				Binder.BorderSizePixel = 0
+				Binder.Position = UDim2.new(0, 1, 0, 1)
+				Binder.Size = UDim2.new(0, 360, 0, 20)
+
+				UICorner.CornerRadius = UDim.new(0, 3)
+
+				Name.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Name.BackgroundTransparency = 1.000
+				Name.BorderSizePixel = 0
+				Name.Position = UDim2.new(0, 9, 0, 1)
+				Name.Size = UDim2.new(0, 318, 0, 19)
+				Name.Font = Enum.Font.Ubuntu
+				Name.TextColor3 = Color3.fromRGB(255, 10, 243)
+				Name.TextScaled = true
+				Name.TextXAlignment = Enum.TextXAlignment.Left
+				Name.Text = Named
+				
+				TextButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+				TextButton.Position = UDim2.new(0.936111093, 0, 0.0499999523, 0)
+				TextButton.Size = UDim2.new(0, 19, 0, 18)
+				TextButton.Font = Enum.Font.SourceSans
+				TextButton.Text = tostring(Default)
+				TextButton.TextColor3 = Color3.fromRGB(255, 10, 243)
+				TextButton.TextScaled = true
+
+				UICorner_2.CornerRadius = UDim.new(0, 3)
+				
+				TextButton.MouseButton1Click:Connect(function()
+					binding = true
+				end)
+				
+				UI.InputBegan:Connect(function(input)
+					if panics ~= true and bind ~= nil and input.KeyCode == bind and bind ~= Enum.KeyCode.Unknown then
+						if holding == true then
+							holdings = true
+							repeat
+								callback()
+								wait(0.01)
+							until holdings == false;
+						elseif bindtogle == false then
+						    bindtogle = true
+						    callback(bindtogle)
+						else
+						    bindtogle = false
+							callback(bindtogle)
+						end
+					end
+				end)
+				UI.InputEnded:Connect(function(input)
+					if panics ~= true and bind ~= nil and input.KeyCode == bind then
+						if holding == true then
+							holdings = false
+						end
+					end
+				end)
+				UI.InputBegan:Connect(function(input)
+					if binding == true then
+						if input.KeyCode == Enum.KeyCode.Backspace then
+							bind = nil
+							TextButton.Text = "..."
+							binding = false
+						else
+							bind = input.KeyCode
+							TextButton.Text = input.KeyCode.Name
+							binding = false
+						end
+					end
+				end)
+			end
+			return funcset;
+		end
+
+		return functions;
+	end
+
+	function tabs:Removes()
+		panics = true
+		MP:Destroy()
+	end
+
+	return tabs;
+end
+return lib
