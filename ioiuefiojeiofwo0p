@@ -1,0 +1,493 @@
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/AltSerVdwq/gregergerger/main/32423"))()
+local AL = lib:Create("Alteryo")
+local main = AL:CreateTab("Main")
+
+local Players = game:GetService("Players");
+local LocalPlayer = Players.LocalPlayer;
+local Mouse = LocalPlayer:GetMouse();
+
+local Camera = game:GetService("Workspace").Camera;
+local CurrentCamera = game:GetService("Workspace").CurrentCamera
+local worldToViewportPoint = CurrentCamera.worldToViewportPoint
+
+local _Character = getrenv()._G.Character;
+local HeadOff = Vector3.new(0, 0.5, 0)
+local LegOff = Vector3.new(0,3,0)
+
+local old
+local a = require(game:GetService("Players").LocalPlayer.PlayerGui.Client.Camera)
+local norecoil = false
+
+
+local espon = nil
+local call = false
+
+local esplist = {
+
+}
+
+getgenv().Aimbot = {
+	AimSmooth = 1,
+	X_Offset = 0,
+	Y_Offset = 0
+}
+
+getgenv().AimbotSettings = {
+	AimDis = 300,
+	AimSleepers = false,
+	TeamCheack = false
+}
+
+getgenv().Esp = {
+	Sleepers = false,
+	Team = false,
+	Chams = false,
+	Bones = false,
+	Tracer = true,
+	Box = false,
+	Health = false,
+	TargetTracers = true,
+	TargetEsp = true,
+	Distance = 1000
+}
+
+getgenv().EspColor = {
+	Team = Color3.new(0, 1, 0.2),
+	Target = Color3.new(1, 0, 0.0156863),
+	Default = Color3.new(0.466667, 0, 1),
+	Tracer = Color3.new(0.466667, 0, 1),
+	TargetTracer = Color3.new(1, 0, 0.0156863),
+	TeamTracer = Color3.new(0, 1, 0.2),
+	Health = Color3.new(0, 1, 0.2)
+}
+
+local fovcircle = Drawing.new("Circle")
+fovcircle.Visible = false
+fovcircle.Radius = 120
+fovcircle.Color = Color3.fromRGB(255,255,255)
+fovcircle.Thickness = 1
+fovcircle.Filled = false
+fovcircle.Transparency = 1
+
+fovcircle.Position = Vector2.new(CurrentCamera.ViewportSize.X / 2, CurrentCamera.ViewportSize.Y / 2)
+
+local CrossHairTop = Drawing.new("Line")
+CrossHairTop.Visible = false
+CrossHairTop.Color = Color3.fromRGB(217, 0, 255)
+CrossHairTop.Thickness = 2
+CrossHairTop.From = Vector2.new(CurrentCamera.ViewportSize.X / 2, (CurrentCamera.ViewportSize.Y / 2) - 5)
+CrossHairTop.To = Vector2.new(CurrentCamera.ViewportSize.X / 2, (CurrentCamera.ViewportSize.Y / 2) + 5)
+
+local CrossHairLR = Drawing.new("Line")
+CrossHairLR.Visible = false
+CrossHairLR.Color = Color3.fromRGB(217, 0, 255)
+CrossHairLR.Thickness = 2
+CrossHairLR.To = Vector2.new((CurrentCamera.ViewportSize.X / 2) + 5, CurrentCamera.ViewportSize.Y / 2)
+CrossHairLR.From = Vector2.new((CurrentCamera.ViewportSize.X / 2) - 5 , CurrentCamera.ViewportSize.Y / 2)
+
+function IsSleeping(head)
+	if head.Rotation ~= Vector3.new(0, 0, -75) then
+		return true;
+	else
+		return false;
+	end
+end
+function NotTeam(head)
+	if head:FindFirstChild("Nametag") then
+		if head.Nametag.tag.Text ~= "Shylou2644" then
+			return true;
+		end
+	end
+end
+
+function AimbotGet()
+	local closestPlayer = nil;
+	local shortestDistance = AimbotSettings["AimDis"];
+	for i, v in pairs(workspace:GetChildren()) do
+		if v:IsA("Model") and v:FindFirstChild("Humanoid") then
+			if v.Humanoid.Health ~= 0 and v.PrimaryPart ~= nil and v:FindFirstChild("Head") then
+				local pos = Camera.WorldToViewportPoint(Camera, v.PrimaryPart.Position)
+				local magnitude = (_Character.character.Middle.Position - v.PrimaryPart.Position).magnitude
+				local fovmagnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).magnitude
+
+				if AimbotSettings["AimSleepers"] == false and AimbotSettings["TeamCheack"] == false then
+					if magnitude < shortestDistance and fovmagnitude < 120 then
+						closestPlayer = v
+						shortestDistance = magnitude
+					end
+				elseif AimbotSettings["AimSleepers"] == true and AimbotSettings['TeamCheack'] == false then
+					if IsSleeping(v.Head) == true then
+						if magnitude < shortestDistance and fovmagnitude < 120 then
+							closestPlayer = v
+							shortestDistance = magnitude
+						end
+					end
+				elseif AimbotSettings['AimSleepers'] == true and AimbotSettings['TeamCheack'] == true then
+					if IsSleeping(v.Head) == true and NotTeam(v.Head) then
+						if magnitude < shortestDistance and fovmagnitude < 120 then
+							closestPlayer = v
+							shortestDistance = magnitude
+						end
+					end
+				elseif AimbotSettings['AimSleepers'] == false and AimbotSettings['TeamCheack'] == true then
+					if NotTeam(v.Head) then
+						if magnitude < shortestDistance and fovmagnitude < 120 then
+							closestPlayer = v
+							shortestDistance = magnitude
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return closestPlayer
+end
+function drawingesp(target,box,name,health,tracer)
+	if espon == true then
+		if target:FindFirstChild("EspSet") then
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if target:FindFirstChild("HumanoidRootPart") then
+					local RootParts = target.HumanoidRootPart
+					local corotune = false
+					local removeds = false
+
+					if RootParts ~= nil then
+						local Vector, onScreen = CurrentCamera:worldToViewportPoint(RootParts.Position)
+						local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootParts.Position)
+						local HeadPosition = worldToViewportPoint(CurrentCamera, target.Head.Position + HeadOff)
+						local LegPosition = worldToViewportPoint(CurrentCamera, RootParts.Position - LegOff)
+
+						local magnitude = (_Character.character.Middle.Position - RootParts.Position).magnitude
+
+						local pos = Camera.WorldToViewportPoint(Camera, target.PrimaryPart.Position)
+						local magnitude = (_Character.character.Middle.Position - target.PrimaryPart.Position).magnitude
+						local fovmagnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).magnitude
+						local shortestDistance = AimbotSettings["AimDis"];
+
+						if target.Head ~= nil then
+							if espon == true then
+								if onScreen then
+									if magnitude <= Esp["Distance"] then
+										if Esp["Team"] == true then
+											if target.Head.Nametag.tag.Text == "Shylou2644" then
+												box.Size = Vector2.new(2000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+												box.Position = Vector2.new(RootPosition.X - box.Size.X / 2, RootPosition.Y - box.Size.Y / 2)
+												box.Visible = true
+												box.Color = EspColor["Team"]
+
+												name.Size = 25
+												name.Position = Vector2.new(RootPosition.X, RootPosition.Y - 25)
+												name.Text = target.Head.Clantag.tag.Text
+												name.Visible = true
+												name.Color = EspColor["Team"]
+
+												if Esp["Tracer"] == true then
+													if tracer ~= nil then
+														tracer.To = Vector2.new(RootPosition.X,RootPosition.Y)
+														tracer.From = Vector2.new(Camera.ViewportSize.X / 2,(Camera.ViewportSize.Y / 2) + 500)
+														tracer.Visible = true
+														tracer.Color = EspColor["Tracer"]
+													end
+												else
+													if tracer ~= nil then
+														tracer.Visible = false
+													end
+												end
+												if Esp["TargetTracers"] == true then
+													if magnitude < shortestDistance and fovmagnitude < 120 then
+														if tracer ~= nil then
+															tracer.To = Vector2.new(RootPosition.X,RootPosition.Y)
+															tracer.From = Vector2.new(Camera.ViewportSize.X / 2,(Camera.ViewportSize.Y / 2) + 500)
+															tracer.Visible = true
+															tracer.Color = EspColor["TargetTracer"]
+														end
+													end
+												end
+												if Esp["TargetEsp"] == true then
+													if magnitude < shortestDistance and fovmagnitude < 120 then
+														box.Color = EspColor["Target"]
+														name.Color = EspColor["Target"]
+													end
+												end
+											end
+										else
+											box.Size = Vector2.new(2000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+											box.Position = Vector2.new(RootPosition.X - box.Size.X / 2, RootPosition.Y - box.Size.Y / 2)
+											box.Visible = true
+											box.Color = EspColor["Default"]
+
+											name.Size = 25
+											name.Position = Vector2.new(RootPosition.X, RootPosition.Y - 25)
+											name.Text = target.Head.Nametag.tag.Text
+											name.Visible = true
+											name.Color = EspColor["Default"]
+
+											if Esp["Tracer"] == true then
+												if tracer ~= nil then
+													tracer.To = Vector2.new(RootPosition.X,RootPosition.Y)
+													tracer.From = Vector2.new(Camera.ViewportSize.X / 2,(Camera.ViewportSize.Y / 2) + 500)
+													tracer.Visible = true
+													tracer.Color = EspColor["Tracer"]
+												end
+											else
+												if tracer ~= nil then
+													tracer.Visible = false
+												end
+											end
+											if Esp["TargetTracers"] == true then
+												if magnitude < shortestDistance and fovmagnitude < 120 then
+													if tracer ~= nil then
+														tracer.To = Vector2.new(RootPosition.X,RootPosition.Y)
+														tracer.From = Vector2.new(Camera.ViewportSize.X / 2,(Camera.ViewportSize.Y / 2) + 500)
+														tracer.Visible = true
+														tracer.Color = EspColor["TargetTracer"]
+													end
+												end
+											end
+											if Esp["TargetEsp"] == true then
+												if magnitude < shortestDistance and fovmagnitude < 120 then
+													box.Color = EspColor["Target"]
+													name.Color = EspColor["Target"]
+												end
+											end
+										end	
+									else
+										if box ~= nil then
+											box.Visible = false
+											name.Visible = false
+											if health ~= nil then
+												health.Visible = false
+											end
+											if tracer ~= nil then
+												tracer.Visible = false
+											end
+										end
+									end			
+								else
+									box.Visible = false
+									name.Visible = false
+									if health ~= nil then
+										health.Visible = false
+									end
+									if tracer ~= nil then
+										tracer.Visible = false
+									end
+								end
+							else
+								box.Visible = false
+								name.Visible = false	
+								if health ~= nil then
+									health.Visible = false
+								end
+								if tracer ~= nil then
+									tracer.Visible = false
+								end
+							end
+						end
+					end
+				else
+					box.Visible = false
+					name.Visible = false
+					if health ~= nil then
+						health.Visible = false
+					end
+					if tracer ~= nil then
+						tracer.Visible = false
+					end
+					if target:FindFirstChild("EspSet") then
+						target:FindFirstChild("EspSet"):Remove()
+					end
+				end
+			end)
+		end
+	elseif espon == false then
+		box.Visible = false
+		name.Visible = false
+		if health ~= nil then
+			health.Visible = false
+		end
+		if tracer ~= nil then
+			tracer.Visible = false
+		end
+		if target:FindFirstChild("EspSet") then
+			target:FindFirstChild("EspSet"):Remove()
+		end
+	end
+end
+coroutine.wrap(drawingesp)
+
+function esp(target)
+	if target:FindFirstChild("Head") and target.Head:FindFirstChild("Nametag") then
+		local magnitude = (_Character.character.Middle.Position - target.HumanoidRootPart.Position).magnitude
+
+		if magnitude <= Esp["Distance"] then
+			local health = nil
+			local tracer = nil
+
+			local Box = Drawing.new("Square")
+			Box.Visible = false
+			Box.Thickness = 1
+			Box.Transparency = 1
+			Box.Filled = false
+
+			local Name = Drawing.new("Text")
+			Name.Center = true
+			Name.Transparency = 1
+			Name.Visible = false
+
+			if Esp["Health"] == true then
+				health = Drawing.new("Square")
+				health.Visible = false
+				health.Thickness = 1
+				health.Transparency = 1
+				health.Filled = false
+			end
+
+			if Esp["Tracer"] == true or Esp["TargetTracers"] then
+				tracer = Drawing.new("Line")
+				tracer.Visible = false
+				tracer.Thickness = 1
+				tracer.Transparency = 1
+			end 
+
+			drawingesp(target,Box,Name,health,tracer)
+		else
+			if target:FindFirstChild("EspSet") then
+				target:FindFirstChild("EspSet"):Remove()
+			end
+		end
+	end
+end
+
+local aimbot = main:CreateFunction("Aimbot",function(callback) 
+end)
+aimbot:AddLine() 
+aimbot:AddBinder("Aimlock","G",false,function(callback)
+	print(callback)
+	call = callback
+	while call == true do
+		Target = AimbotGet();
+		if Target then
+			local Head = Target:FindFirstChild("Head");
+			if Head then
+				local pos, _ = Camera:WorldToScreenPoint(Head.Position)
+				mousemoverel((pos.X - (Mouse.X))/Aimbot["AimSmooth"], (pos.Y - (Mouse.Y))/Aimbot["AimSmooth"])
+			end
+		end
+		wait(0.01)
+	end
+end)
+aimbot:AddLable("Settings")
+aimbot:AddToggle("TeamCheck",function(callback)
+	if callback == true then
+		AimbotSettings['TeamCheack'] = true
+	else
+		AimbotSettings['TeamCheack'] = false
+	end
+end)
+aimbot:AddToggle("SleepAim",function(callback)
+	if callback == true then
+		AimbotSettings['AimSleepers'] = false
+	else
+		AimbotSettings['AimSleepers'] = true
+	end
+end)
+aimbot:AddSlider("Distance",1,2000,function(callback)
+	AimbotSettings['AimDis'] = callback
+end)
+aimbot:AddSlider("AimSmooth",1,10,function(callback)
+	Aimbot['AimSmooth'] = callback
+end)
+aimbot:AddLable("Fov Settings")
+aimbot:AddToggle("Fov",function(callback)
+	if callback == true then
+		fovcircle.Visible = callback
+	else
+		fovcircle.Visible = callback
+	end
+end)
+aimbot:AddSlider("For Radius",1,320,function(callback)
+	fovcircle.Radius = callback
+end)
+aimbot:AddToggle("Fov Filled",function(callback)
+	if callback == true then
+		fovcircle.Filled = callback
+	else
+		fovcircle.Filled = callback
+	end
+end)
+aimbot:AddSlider("Fov Opacity",1,10,function(callback)
+	fovcircle.Transparency = callback/10
+end)
+aimbot:AddColorPicker("Fov Color",function(callback)
+	fovcircle.Color = callback
+end,function(callback2)
+	fovcircle.Color = callback2
+end)
+
+local espframe = main:CreateFunction("Esp",function(callback) 
+	if espon == false  then
+		espon = true
+		while espon == true do
+			for v,i in pairs(workspace:GetChildren()) do
+				if i:FindFirstChild("Humanoid") and i:FindFirstChild("HumanoidRootPart") and i:FindFirstChild("Head") and i.Head:FindFirstChild("Nametag") then
+					if i:FindFirstChild("EspSet") then
+					elseif not i:FindFirstChild("EspSet") then
+						local esps = Instance.new("IntValue",i)
+						esps.Name = "EspSet"
+						esp(i)
+					end
+				end
+			end
+			wait(0.1)
+		end
+	else
+		espon = false
+	end
+end)
+
+espframe:AddToggle("Tracer",function(callback)
+	if callback == true then
+		Esp['Tracer'] = true
+	else
+		Esp['Tracer'] = false
+	end
+end)
+espframe:AddToggle("Target Tracer",function(callback)
+	if callback == true then
+		Esp['TargetTracers'] = true
+	else
+		Esp['TargetTracers'] = false
+	end
+end)
+espframe:AddToggle("Target Esp",function(callback)
+	if callback == true then
+		Esp['TargetEsp'] = true
+	else
+		Esp['TargetEsp'] = false
+	end
+end)
+
+local misc = main:CreateFunction("Misc",function(callback) 
+end)
+misc:AddToggle("NoRecoil",function(callback)
+	norecoil = callback
+	old = hookfunction(a.Recoil,function(...)
+		if norecoil == true then
+			return nil
+		else
+			return old(...)
+		end
+	end)
+end)
+
+misc:AddToggle("Cross hair",function(callback)
+	if callback == true then
+		CrossHairTop.Visible = true
+		CrossHairLR.Visible = true
+	else
+		CrossHairTop.Visible = false
+		CrossHairLR.Visible = false
+	end
+end)
