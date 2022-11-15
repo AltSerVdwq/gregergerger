@@ -19,6 +19,11 @@ local a = require(game:GetService("Players").LocalPlayer.PlayerGui.Client.Camera
 local norecoil = false
 
 
+local gmt = getrawmetatable(game)
+setreadonly(gmt, false)
+local oldindex = gmt.__index
+
+
 local espon = nil
 local call = false
 
@@ -491,3 +496,34 @@ misc:AddToggle("Cross hair",function(callback)
 		CrossHairLR.Visible = false
 	end
 end)
+
+misc:AddSlider("Fov",1,10,function(callback)
+	gmt.__index = newcclosure(function(self,b)
+		if b == "FieldOfView" then
+			return callback
+		end
+		return oldindex(self,b)
+	end)
+end)
+
+misc:AddBinder("LootAll","T",false,function(callback)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 1,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 2,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 3,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 4,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 5,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 6,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 7,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 8,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 9,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 10,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 11,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 12,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 13,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 14,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 15,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 16,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 17,true)
+	game:GetService("ReplicatedStorage").e:FireServer(106, 18,true)
+end)
+
