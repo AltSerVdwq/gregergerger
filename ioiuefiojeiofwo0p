@@ -18,12 +18,6 @@ local old
 local a = require(game:GetService("Players").LocalPlayer.PlayerGui.Client.Camera)
 local norecoil = false
 
-
-local gmt = getrawmetatable(game)
-setreadonly(gmt, false)
-local oldindex = gmt.__index
-
-
 local espon = nil
 local call = false
 
@@ -495,15 +489,6 @@ misc:AddToggle("Cross hair",function(callback)
 		CrossHairTop.Visible = false
 		CrossHairLR.Visible = false
 	end
-end)
-
-misc:AddSlider("Fov",1,10,function(callback)
-	gmt.__index = newcclosure(function(self,b)
-		if b == "FieldOfView" then
-			return callback
-		end
-		return oldindex(self,b)
-	end)
 end)
 
 misc:AddBinder("LootAll","T",false,function(callback)
