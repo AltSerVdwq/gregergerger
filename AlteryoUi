@@ -647,7 +647,7 @@ function alteryoui:LoadUi(Name,Icon)
 									bindtogle = true
 									callback(bindtogle)
 								else
-									Status.BackgroundColor3 = Color3.fromRGB(34, 255, 0)
+									Status.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
 									bindtogle = false
 									callback(bindtogle)
 								end
@@ -666,7 +666,7 @@ function alteryoui:LoadUi(Name,Icon)
 									bindtogle = true
 									callback(bindtogle)
 								else
-									Status.BackgroundColor3 = Color3.fromRGB(34, 255, 0)
+									Status.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
 									bindtogle = false
 									callback(bindtogle)
 								end
