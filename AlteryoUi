@@ -676,15 +676,15 @@ function alteryoui:LoadUi(Name,Icon)
 					UserInputService.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.MouseButton2 then
 							if panics ~= true and bind ~= nil and input.UserInputType == bind then
-								Status.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
 								if holding == true then
+									Status.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
 									holdings = false
 								end
 							end
 						else
 							if panics ~= true and bind ~= nil and input.KeyCode == bind then
-								Status.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
 								if holding == true then
+									Status.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
 									holdings = false
 								end
 							end
@@ -758,4 +758,4 @@ function alteryoui:LoadUi(Name,Icon)
 	
 	return tabs
 end
-return alteryoui
+returt alteryoui
