@@ -12,6 +12,7 @@ function based:CheckPlayer(id,Name)
 	for v,i in pairs(AcceptId) do
 		if i == id then
 			checked = true
+			print("checked")
 			return true
 		end
 	end
