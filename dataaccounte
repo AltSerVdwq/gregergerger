@@ -5,7 +5,7 @@ local AcceptId = {
 	840658376
 }
 local AcceptName = {}
-CheckPlayer(id,Name)
+function CheckPlayer(id,Name)
 	for v,i in pairs(AcceptId) do
 		if i == id then
 			checked = true
