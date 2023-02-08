@@ -1,0 +1,25 @@
+local based = {}
+
+local AcceptId = {}
+local AcceptName = {}
+
+local checked = false
+
+function based:CheckPlayer(id,Name)
+	for v,i in pairs(AcceptId) do
+		if i == id then
+			checked = true
+			return true
+		end
+	end
+	if checked == false then
+		for v,i in pairs(AcceptName) do
+			if i == AcceptName then
+				checked = true
+				return true
+			end
+		end
+	end
+end
+
+return based
