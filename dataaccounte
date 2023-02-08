@@ -5,10 +5,7 @@ local AcceptId = {
 	840658376
 }
 local AcceptName = {}
-
-local checked = false
-
-function based:CheckPlayer(id,Name)
+CheckPlayer(id,Name)
 	for v,i in pairs(AcceptId) do
 		if i == id then
 			checked = true
@@ -25,5 +22,3 @@ function based:CheckPlayer(id,Name)
 		end
 	end
 end
-
-return based
