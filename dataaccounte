@@ -1,6 +1,8 @@
 local based = {}
 
-local AcceptId = {}
+local AcceptId = {
+	330071420,
+}
 local AcceptName = {}
 
 local checked = false
