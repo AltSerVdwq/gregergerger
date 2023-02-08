@@ -7,6 +7,7 @@ local AcceptId = {
 local AcceptName = {}
 function CheckPlayer(id,Name)
 	for v,i in pairs(AcceptId) do
+	print(id)
 		if i == id then
 			checked = true
 			print("checked")
