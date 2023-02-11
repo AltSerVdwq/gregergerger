@@ -2,7 +2,8 @@ local based = {}
 
 local AcceptId = {
 	330071420,
-	840658376
+	840658376,
+	1144764283
 }
 local AcceptName = {}
 function CheckPlayer(id,Name)
