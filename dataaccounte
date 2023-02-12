@@ -2,15 +2,18 @@ local based = {}
 
 local AcceptId = {
 	330071420,
-	840658376
+	840658376,
+	961912963
 }
 local GoldId = {
 	330071420,
-	840658376
+	840658376,
+	961912963
 }
 local DiamondId = {
 	330071420,
-	840658376
+	840658376,
+	961912963
 }
 
 function CheckPlayer(id)
