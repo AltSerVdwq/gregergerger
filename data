@@ -1,0 +1,47 @@
+local based = {
+	123,
+}
+
+local AcceptId = {
+	330071420,
+	840658376,
+	961912963,
+}
+local GoldId = {
+	330071420,
+	840658376,
+	961912963,
+}
+local DiamondId = {
+	330071420,
+	840658376,
+	961912963,
+}
+
+function CheckPlayer(id)
+	for v,i in pairs(AcceptId) do
+		if i == id then
+			checked = true
+			print("checked")
+			return true
+		end
+	end
+end
+function CheckGold(id)
+	for v,i in pairs(GoldId) do
+		if i == id then
+			checked = true
+			print("checked")
+			return true
+		end
+	end
+end
+function CheckDiamond(id)
+	for v,i in pairs(DiamondId) do
+		if i == id then
+			checked = true
+			print("checked")
+			return true
+		end
+	end
+end
