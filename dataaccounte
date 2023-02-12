@@ -4,8 +4,12 @@ local AcceptId = {
 	330071420,
 	840658376
 }
-local AcceptName = {}
-function CheckPlayer(id,Name)
+local GoldId = {
+	330071420,
+	840658376
+}
+
+function CheckPlayer(id)
 	for v,i in pairs(AcceptId) do
 		if i == id then
 			checked = true
@@ -13,12 +17,13 @@ function CheckPlayer(id,Name)
 			return true
 		end
 	end
-	if checked == false then
-		for v,i in pairs(AcceptName) do
-			if i == AcceptName then
-				checked = true
-				return true
-			end
+end
+function CheckGold(id)
+	for v,i in pairs(GoldId) do
+		if i == id then
+			checked = true
+			print("checked")
+			return true
 		end
 	end
 end
