@@ -16,7 +16,7 @@ local DiamondId = {
 	961912963,
 }
 
-function CheckPlayer(id)
+local function CheckPlayer(id)
 	for v,i in pairs(AcceptId) do
 		if i == id then
 			checked = true
@@ -25,7 +25,7 @@ function CheckPlayer(id)
 		end
 	end
 end
-function CheckGold(id)
+local function CheckGold(id)
 	for v,i in pairs(GoldId) do
 		if i == id then
 			checked = true
@@ -34,7 +34,7 @@ function CheckGold(id)
 		end
 	end
 end
-function CheckDiamond(id)
+local function CheckDiamond(id)
 	for v,i in pairs(DiamondId) do
 		if i == id then
 			checked = true
